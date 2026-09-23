@@ -9,6 +9,8 @@ import rehypeExpressiveCode from "rehype-expressive-code";
 import * as pagefind from "pagefind";
 import { fileURLToPath } from "node:url";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const expressiveCodeOptions = {
   themes: ["github-dark"],
   defaultProps: {
@@ -86,7 +88,10 @@ const pagefindIntegration = () => ({
 
 export default defineConfig({
   site: "https://jiulibaiye.github.io/mengyao.github.io",
-  base: "/mengyao.github.io",
+
+  // 本地开发使用根路径，GitHub Pages 使用仓库路径
+  base: isDev ? "/" : "/mengyao.github.io",
+
   output: "static",
 
   prefetch: {
