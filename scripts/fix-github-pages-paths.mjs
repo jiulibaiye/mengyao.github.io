@@ -17,18 +17,9 @@ const extensions = new Set([
 let changedFiles = 0;
 let replacements = 0;
 
-function shouldFix(value) {
-  if (!value.startsWith("/")) return false;
-
-  return (
-    value.startsWith("/themes/") ||
-    value.startsWith("/blog-covers/")
-  );
-}
-
 function fixContent(content) {
   return content.replace(
-    /(["'`(=:\s])\/(themes|blog-covers)\//g,
+    /(["'`(=:\s]|&quot;)\/(themes|blog-covers)\//g,
     (match, prefix, folder) => {
       replacements++;
       return `${prefix}${BASE}/${folder}/`;
