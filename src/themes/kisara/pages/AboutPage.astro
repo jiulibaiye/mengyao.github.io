@@ -1,4 +1,4 @@
----
+﻿---
 import KisaraLayout from "../layouts/KisaraLayout.astro";
 import aboutStylesheet from "../styles/about.css?url";
 import { Icon } from "astro-icon/components";
@@ -21,20 +21,20 @@ const techPresentation = {
 } as const;
 
 const scenes = [
-  { key: "profile", label: "PROFILE", title: "档案" },
-  { key: "tech", label: "TECH", title: "技术线" },
-  { key: "anime", label: "ANIME", title: "番剧" },
+  { key: "profile", label: "PROFILE", title: "简介" },
+  { key: "tech", label: "TECH", title: "技术栈" },
+  { key: "anime", label: "ANIME", title: "动画" },
   { key: "xp", label: "XP", title: "角色属性" },
   { key: "games", label: "GAMES", title: "游戏" },
-  { key: "pulse", label: "PULSE", title: "当前电波" },
-  { key: "epilogue", label: "END", title: "谢幕" }
+  { key: "pulse", label: "PULSE", title: "当前信号" },
+  { key: "epilogue", label: "END", title: "尾声" }
 ] as const;
 
 const railScenes = scenes.slice(0, -1);
 ---
 
-<KisaraLayout title="Me | Kisara" description="关于喝益胃与 Yuimi Lab。" stylesheets={[aboutStylesheet]}>
-  <section class="kisara-me" data-kisara-me data-active-scene="0" aria-label="Yuimi-chaya 个人档案">
+<KisaraLayout title="Me | Kisara" description="关于梦妖 和 Yuimi Lab。" stylesheets={[aboutStylesheet]}>
+  <section class="kisara-me" data-kisara-me data-active-scene="0" aria-label="Yuimi-chaya 个人简介">
     <div class="kisara-me-ambient" aria-hidden="true">
       <i></i><i></i><i></i>
     </div>
@@ -50,23 +50,23 @@ const railScenes = scenes.slice(0, -1);
         class="kisara-me-scene kisara-me-profile"
         data-me-scene
         data-scene-position="active"
-        data-scene-name="档案"
+        data-scene-name="简介"
         aria-hidden="false"
       >
         <div class="kisara-me-profile-aperture" aria-hidden="true">
           <span></span>
           <i></i>
-          <p><small>EPISODE 11</small><b>MEMORY 01</b><em>01—05</em></p>
+          <p><small>EPISODE 11</small><b>MEMORY 01</b><em>01/15</em></p>
         </div>
         <div class="kisara-me-profile-intro">
           <figure class="kisara-me-profile-portrait">
             <div class="kisara-me-profile-portrait-media">
-              <img src="/themes/kisara/assets/profile.webp" alt="喝益胃 / Yuimi-chaya 的头像" width="640" height="640" decoding="async" />
+              <img src="/themes/kisara/assets/profile.webp" alt="梦妖 / Yuimi-chaya 的头像" width="640" height="640" decoding="async" />
               <span aria-hidden="true"><i></i><i></i></span>
             </div>
             <figcaption>
               <p>@{profileIdentity.handle}</p>
-              <h1>{profileIdentity.displayName}</h1>
+              <h1>梦妖</h1>
               <small>{profileIdentity.siteName} / PERSONAL SIGNAL</small>
             </figcaption>
           </figure>
@@ -74,19 +74,19 @@ const railScenes = scenes.slice(0, -1);
           <div class="kisara-me-profile-voice">
             <p class="kisara-me-profile-kicker"><span>00</span> PERSONAL SIGNAL / ME</p>
             <h2>先有一个想做的东西，<br /><em>再去补齐让它成立的技术。</em></h2>
-            <p class="kisara-me-profile-lead">动画、交互、模型、工具，以及那些没必要但很好玩的点子，最后都会在这里留下痕迹。比起把它们写成技能清单，我更想让页面本身说明我喜欢什么。</p>
+            <p class="kisara-me-profile-lead">动画、交互、模型、工具，以及那些没必要但是很好玩的点子，最后都会在这里留下痕迹。比起把它们写成技能清单，我更想让页面本身说明我喜欢什么。</p>
             <nav class="kisara-me-profile-links" aria-label="Yuimi 社交链接">
               <a href={profileIdentity.github} target="_blank" rel="noreferrer">
-                <Icon name="tabler:brand-github" aria-hidden="true" /><span>GITHUB</span><i>↗</i>
+                <Icon name="tabler:brand-github" aria-hidden="true" /><span>GITHUB</span><i>→</i>
               </a>
               <a href={profileIdentity.bilibili} target="_blank" rel="noreferrer">
-                <Icon name="tabler:brand-bilibili" aria-hidden="true" /><span>BILIBILI</span><i>↗</i>
+                <Icon name="tabler:brand-bilibili" aria-hidden="true" /><span>BILIBILI</span><i>→</i>
               </a>
             </nav>
             <a class="kisara-me-profile-friends-link" href={getThemePath("kisara", "/friends/")}>
               <span class="kisara-me-profile-friends-mark" aria-hidden="true"><Icon name="tabler:heart" /></span>
-              <span class="kisara-me-profile-friends-copy"><small>FRIEND LINKS / OPEN ROUTE</small><strong>进入友联页</strong></span>
-              <i aria-hidden="true">↗</i>
+              <span class="kisara-me-profile-friends-copy"><small>FRIEND LINKS / OPEN ROUTE</small><strong>进入友链页面</strong></span>
+              <i aria-hidden="true">→</i>
             </a>
             <div class="kisara-me-profile-signature" aria-hidden="true">
               <span>YUIMI-CHAYA</span><i></i><small>ANIME / CODE / INTERACTION</small>
@@ -100,7 +100,7 @@ const railScenes = scenes.slice(0, -1);
         data-me-scene
         data-me-memory="departure"
         data-scene-position="after"
-        data-scene-name="技术线"
+        data-scene-name="技术栈"
         aria-hidden="true"
         inert
       >
@@ -113,7 +113,7 @@ const railScenes = scenes.slice(0, -1);
           <header>
             <p class="kisara-me-memory-kicker"><span>01</span> DEPARTURE LOG / TECH</p>
             <h2>Leave the cave.<br /><em>Carry the tools.</em></h2>
-            <p>第一次被带离封闭的地方，世界像一张刚打开的舷窗。技术栈也一样：先带上手边能用的东西，再慢慢飞远。</p>
+            <p>第一次被带出封闭的地方，世界像一张刚打开的画布。技术栈也是一样：先带上手上能用的东西，再慢慢飞远。</p>
           </header>
           <div class="kisara-me-flight-instrument" data-me-flight-dial>
             <span class="kisara-me-flight-dial" aria-hidden="true"><i></i><i></i><b></b></span>
@@ -138,7 +138,7 @@ const railScenes = scenes.slice(0, -1);
         data-me-scene
         data-me-memory="ritual"
         data-scene-position="after"
-        data-scene-name="番剧"
+        data-scene-name="动画"
         aria-hidden="true"
         inert
       >
@@ -159,7 +159,7 @@ const railScenes = scenes.slice(0, -1);
                 <i aria-hidden="true"></i>
               </em>
             </h2>
-            <p>有些作品只是看过，有些作品会悄悄参与塑造你。它们不是排名，更像写在契约边缘、迟迟没有褪色的旁注。</p>
+            <p>有些作品只是看过，有些作品会悄悄参与塑造你。它们不是排名，更像写在契约边缘、迟迟没有褪色的附注。</p>
           </header>
           <div class="kisara-me-contract-field">
             <svg class="kisara-me-contract-ink" viewBox="0 0 560 360" fill="none" aria-hidden="true">
@@ -262,7 +262,7 @@ const railScenes = scenes.slice(0, -1);
                 <span class="is-neutral" aria-hidden="true">neutral.</span>
               </em>
             </h2>
-            <p>偏好不是统计表。它更像一份被偷偷改过的契约，直到真正靠近时，才发现某些条件早就写在里面。</p>
+            <p>偏好不是统计表。它更像一份被偷偷修改过的契约，直到真正靠近时，才发现某些条件早就写在里面。</p>
           </header>
           <ol class="kisara-me-amended-clauses">
             {xpFavorites.map((item, index) => (
@@ -304,7 +304,7 @@ const railScenes = scenes.slice(0, -1);
                 <span class="is-shu">hand</span>
               </em>
             </h2>
-            <p>真正留下来的往往不是完成率，而是那些愿意认真交出去的夜晚、练习和存档。太阳升起以后，它们仍然算数。</p>
+            <p>真正留下来的往往不是完成度，而是那些愿意认真交出去的夜晚、练习和存档。太阳升起以后，它们依然算数。</p>
           </header>
           <ol class="kisara-me-shared-saves">
             {favoriteGames.map((game) => (
@@ -323,7 +323,7 @@ const railScenes = scenes.slice(0, -1);
         data-me-scene
         data-me-memory="condition"
         data-scene-position="after"
-        data-scene-name="当前电波"
+        data-scene-name="当前信号"
         aria-hidden="true"
         inert
       >
@@ -337,7 +337,7 @@ const railScenes = scenes.slice(0, -1);
           <header>
             <p class="kisara-me-memory-kicker"><span>05</span> HIDDEN CONDITION / PULSE</p>
             <h2>The line beneath<br /><em><span>the crossed-</span><span>out words.</span></em></h2>
-            <p>旧条件被划掉以后，真正想留下的东西才露出来。现在没有宏大计划，只有几条仍在持续发亮的兴趣信号。</p>
+            <p>旧条件被划掉以后，真正想留下的东西才显露出来。现在没有宏大计划，只有几条仍在持续发光的兴趣信号。</p>
           </header>
           <ol class="kisara-me-rewritten-signals">
             {currentSignals.map((signal, index) => (
@@ -369,7 +369,7 @@ const railScenes = scenes.slice(0, -1);
         class="kisara-me-scene kisara-me-epilogue"
         data-me-scene
         data-scene-position="after"
-        data-scene-name="谢幕"
+        data-scene-name="尾声"
         aria-hidden="true"
         inert
       >
@@ -378,11 +378,11 @@ const railScenes = scenes.slice(0, -1);
             class="kisara-me-epilogue-image"
             type="button"
             data-me-epilogue-audio
-            aria-label="播放谢幕声音"
+            aria-label="播放尾声声音"
           >
             <img
               src="/themes/kisara/assets/me-epilogue.webp"
-              alt="木更亲吻镜头并向观众道谢的动画终帧"
+              alt="画面，角色鞠躬并向观众致谢的动画终帧"
               width="2560"
               height="1440"
               loading="lazy"
@@ -392,14 +392,14 @@ const railScenes = scenes.slice(0, -1);
           </button>
           <figcaption>
             <span>EPILOGUE / LAST FRAME</span>
-            <strong>ご視聴ありがとうございました。</strong>
+            <strong>ありがとう。</strong>
             <small>Thank you for staying until the end.</small>
           </figcaption>
         </figure>
       </article>
     </div>
 
-    <nav class="kisara-me-rail" data-me-rail aria-label="个人档案章节">
+    <nav class="kisara-me-rail" data-me-rail aria-label="个人简介章节">
       <span class="kisara-me-rail-track" aria-hidden="true"><i data-me-rail-progress></i></span>
       <div>
         {railScenes.map((scene, index) => (
@@ -416,9 +416,9 @@ const railScenes = scenes.slice(0, -1);
     </nav>
 
     <div class="kisara-me-switch-cue" aria-hidden="true">
-      <span>SCROLL / SWIPE</span><i></i><small>切换档案章节</small>
+      <span>SCROLL / SWIPE</span><i></i><small>切换简介章节</small>
     </div>
-    <p class="kisara-me-announcer" data-me-announcer aria-live="polite">第 1 章，共 {scenes.length} 章：档案</p>
+    <p class="kisara-me-announcer" data-me-announcer aria-live="polite">第 1 章，共 7 章：简介</p>
   </section>
 
   <script is:inline data-astro-rerun>
@@ -562,7 +562,7 @@ const railScenes = scenes.slice(0, -1);
         memoryReturn.removeAttribute("aria-hidden");
         memoryReturn.setAttribute(
           "aria-label",
-          archived ? "《记忆归还》已收进隐藏歌单" : "收下未归档的记忆"
+          archived ? "《记忆归还》已收进隐藏清单" : "收下未归档的记忆"
         );
         if (memoryReturnKicker) memoryReturnKicker.textContent = archived ? "MEMORY ARCHIVED" : "UNFILED TRACE";
         if (memoryReturnLabel) memoryReturnLabel.textContent = archived ? "记忆已归还" : "MEMORY RETURN";
@@ -635,7 +635,7 @@ const railScenes = scenes.slice(0, -1);
         });
 
         const scene = scenes[boundedIndex];
-        const sceneName = scene instanceof HTMLElement ? scene.dataset.sceneName || "档案" : "档案";
+        const sceneName = scene instanceof HTMLElement ? scene.dataset.sceneName || "简介" : "简介";
         const label = markers[boundedIndex]?.querySelector("span")?.textContent
           || (boundedIndex === scenes.length - 1 ? "END" : "PROFILE");
         if (currentNumber) currentNumber.textContent = String(boundedIndex + 1).padStart(2, "0");
@@ -739,7 +739,7 @@ const railScenes = scenes.slice(0, -1);
         if (!(marker instanceof HTMLElement)) return;
         const target = Number(marker.dataset.meTarget);
         if (Number.isFinite(target)) setActiveScene(target);
-      }, { signal }));
+      }, { signal });
 
       document.addEventListener("click", (event) => {
         const target = event.target instanceof Element ? event.target : null;
@@ -778,7 +778,7 @@ const railScenes = scenes.slice(0, -1);
           detail: { trackId: "kioku-kikan", autoplay: false }
         }));
         setMemoryReturnState("archived");
-        if (announcer) announcer.textContent = "一段被归还的记忆已收进本次访问的隐藏歌单。";
+        if (announcer) announcer.textContent = "一段被归还的记忆已收入本次访问的隐藏歌单。";
       }, { signal });
 
       setActiveScene(0, true);
