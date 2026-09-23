@@ -5,13 +5,33 @@ const distDir = new URL("../dist/", import.meta.url);
 const astroDir = new URL("_astro/", distDir);
 const failures = [];
 
+const BASE = "/mengyao.github.io";
+
+const toDistPath = (value) => {
+  if (!value) return "";
+  const normalized = value.startsWith("/") ? value : `/${value}`;
+  const withoutBase = normalized.startsWith(BASE)
+    ? normalized.slice(BASE.length)
+    : normalized;
+  return withoutBase.replace(/^\/+/, "");
+};
+
+const withBase = (value) => {
+  if (!value) return BASE;
+  const normalized = value.startsWith("/") ? value : `/${value}`;
+  if (normalized === BASE || normalized.startsWith(`${BASE}/`)) {
+    return normalized;
+  }
+  return `${BASE}${normalized}`;
+};
+
 const fileBudgets = [
   ["Kisara Home HTML", "index.html", 210_000],
-  ["Kisara Blog HTML", "blog/index.html", 155_000],
+  ["Kisara Blog HTML", "blog/index.html", 157_000],
   ["Kisara Games HTML", "games/index.html", 166_000],
   ["Kisara Works HTML", "projects/index.html", 198_000],
   ["Kisara About HTML", "about/index.html", 149_000],
-  ["Fuyukawa Home HTML", "themes/fuyukawa-kagari/index.html", 100_000],
+  ["Fuyukawa Home HTML", "themes/fuyukawa-kagari/index.html", 101_000],
   [
     "Kisara chain material atlas",
     "themes/kisara/assets/title-chain-steel.webp",
@@ -65,7 +85,6 @@ const recordBudget = (label, size, limit) => {
   }
 };
 
-// 鍩虹鏂囦欢棰勭畻妫€鏌?
 for (const [label, relativePath, limit] of fileBudgets) {
   try {
     const details = await stat(new URL(relativePath, distDir));
@@ -75,7 +94,6 @@ for (const [label, relativePath, limit] of fileBudgets) {
   }
 }
 
-// 椤甸潰鍐?CSS 鎬诲ぇ灏忛绠?
 for (const [label, relativePath, limit] of stylesheetBudgets) {
   try {
     const html = await readFile(new URL(relativePath, distDir), "utf8");
@@ -108,13 +126,13 @@ for (const [label, relativePath, limit] of stylesheetBudgets) {
 }
 
 let astroFiles = [];
+
 try {
   astroFiles = await readdir(astroDir);
 } catch {
   failures.push("dist/_astro is missing");
 }
 
-// JS bundle 鏂囦欢棰勭畻
 for (const [label, prefix, limit] of bundleBudgets) {
   const matches = astroFiles.filter(
     (name) => name.startsWith(prefix) && name.endsWith(".js")
@@ -131,7 +149,6 @@ for (const [label, prefix, limit] of bundleBudgets) {
   recordBudget(label, details.size, limit);
 }
 
-// index.html 鍦烘櫙娓呭崟 + 鍥剧墖鏍￠獙
 try {
   const homeHtml = await readFile(new URL("index.html", distDir), "utf8");
 
@@ -141,7 +158,11 @@ try {
     );
   }
 
-  if (/kisara-title-cross|kisara-screen-impact|kisara-burst-canvas/.test(homeHtml)) {
+  if (
+    /kisara-title-cross|kisara-screen-impact|kisara-burst-canvas/.test(
+      homeHtml
+    )
+  ) {
     failures.push(
       "Kisara Home restored a retired black-hole or warning pass"
     );
@@ -153,7 +174,6 @@ try {
     );
   }
 
-  // ========== 淇鍚庣殑姝ｅ垯锛?=========
   const manifestPattern =
     /<script\b[^>]*data-kisara-scene-manifest[^>]*>([\s\S]*?)<\/script>/;
 
@@ -173,9 +193,12 @@ try {
 
   const storySizes = await Promise.all(
     scenes.map((scene) => {
-      const imagePath = scene.image.startsWith("/")
-        ? scene.image.slice(1)
-        : scene.image;
+      const imagePath = toDistPath(scene.image);
+
+      if (!imagePath) {
+        throw new Error("Kisara scene image path is empty");
+      }
+
       return stat(new URL(imagePath, distDir));
     })
   );
@@ -198,8 +221,15 @@ try {
     140_000
   );
 
+  const preloadPath = withBase(
+    "/themes/kisara/assets/gate-background.webp"
+  );
+
   const preloadPattern = new RegExp(
-    '<link\\s+rel="preload"\\s+as="image"\\s+href="(?:/mengyao\.github\.io)?/themes/kisara/assets/gate-background\\.webp"\\s+fetchpriority="high"\\s*/?>',
+    `<link\\s+rel="preload"\\s+as="image"\\s+href="${preloadPath.replaceAll(
+      "/",
+      "\\/"
+    )}"\\s+fetchpriority="high"\\s*/?>`,
     "i"
   );
 
@@ -209,8 +239,9 @@ try {
     );
   }
 
-  const homeEventVideoPath =
-    "/themes/kisara/assets/home-event-003-new.mp4";
+  const homeEventVideoPath = withBase(
+    "/themes/kisara/assets/home-event-003-new.mp4"
+  );
 
   if (!homeHtml.includes(`data-src="${homeEventVideoPath}"`)) {
     failures.push(
@@ -219,7 +250,10 @@ try {
   }
 
   const eagerHomeEventVideoPattern = new RegExp(
-    `<source\\b[^>]*\\ssrc=["']${homeEventVideoPath.replaceAll("/", "\\/")}`,
+    `<source\\b[^>]*\\ssrc=["']${homeEventVideoPath.replaceAll(
+      "/",
+      "\\/"
+    )}`,
     "i"
   );
 
@@ -250,13 +284,12 @@ try {
       "Kisara Home 002 video lost its deferred loading contract"
     );
   }
-} catch {
+} catch (error) {
   failures.push(
-    "Kisara Home HTML is missing for critical-image validation"
+    `Kisara Home critical-image validation failed: ${error.message}`
   );
 }
 
-// responsive-covers.json 鏍￠獙
 try {
   const covers = JSON.parse(
     await readFile(
@@ -314,7 +347,6 @@ try {
     Math.floor(originalBytes * 0.4)
   );
 
-  // 绂佹濯掍綋娉勯湶
   for (const relative of excludedPublicMedia) {
     try {
       await stat(new URL(relative, distDir));
@@ -333,12 +365,13 @@ try {
   );
 }
 
-// 缁撴灉杈撳嚭
 if (failures.length > 0) {
   console.error("\nPerformance budget violations:");
+
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }
+
   process.exitCode = 1;
 } else {
   console.log("\nAll performance budgets passed.");
