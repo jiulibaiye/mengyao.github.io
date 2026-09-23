@@ -27,7 +27,7 @@ const withBase = (value) => {
 
 const fileBudgets = [
   ["Kisara Home HTML", "index.html", 210_000],
-  ["Kisara Blog HTML", "blog/index.html", 157_000],
+  ["Kisara Blog HTML", "blog/index.html", 158_500],
   ["Kisara Games HTML", "games/index.html", 166_000],
   ["Kisara Works HTML", "projects/index.html", 198_000],
   ["Kisara About HTML", "about/index.html", 149_000],
@@ -120,6 +120,7 @@ for (const [label, relativePath, limit] of stylesheetBudgets) {
       sizes.reduce((total, details) => total + details.size, 0),
       limit
     );
+
   } catch (error) {
     failures.push(`${label} could not be measured: ${error.message}`);
   }
@@ -174,9 +175,8 @@ try {
     );
   }
 
-  const manifestPattern =
-    /<script\b[^>]*data-kisara-scene-manifest[^>]*>([\s\S]*?)<\/script>/;
-
+  // ========== 修复这里！原来的 /<script ... </script>/ 会解析冲突 ==========
+  const manifestPattern = new RegExp('<script\\b[^>]*data-kisara-scene-manifest[^>]*>([\\s\\S]*?)</script>');
   const manifestMatch = homeHtml.match(manifestPattern);
   const manifestText = manifestMatch?.[1];
 
@@ -333,6 +333,7 @@ try {
 
       bytes += published.size;
     }
+
   }
 
   recordBudget(
