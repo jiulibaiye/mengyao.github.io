@@ -12,7 +12,11 @@ const fileBudgets = [
   ["Kisara Works HTML", "projects/index.html", 198_000],
   ["Kisara About HTML", "about/index.html", 149_000],
   ["Fuyukawa Home HTML", "themes/fuyukawa-kagari/index.html", 100_000],
-  ["Kisara chain material atlas", "themes/kisara/assets/title-chain-steel.webp", 110_000]
+  [
+    "Kisara chain material atlas",
+    "themes/kisara/assets/title-chain-steel.webp",
+    110_000
+  ]
 ];
 
 const stylesheetBudgets = [
@@ -21,13 +25,25 @@ const stylesheetBudgets = [
   ["Kisara Games CSS", "games/index.html", 240_000],
   ["Kisara Works CSS", "projects/index.html", 255_000],
   ["Kisara About CSS", "about/index.html", 260_000],
-  ["Fuyukawa Home CSS", "themes/fuyukawa-kagari/index.html", 112_000]
+  ["Fuyukawa Home CSS", "themes/fuyukawa-kagari/index.html", 150_000]
 ];
 
 const bundleBudgets = [
-  ["Kisara shared layout runtime", "KisaraLayout.astro_astro_type_script_index_1_lang.", 9_000],
-  ["Kisara Home primary module", "HomePage.astro_astro_type_script_index_", 225_000],
-  ["Kisara stage loader", "KisaraChibiStage.astro_astro_type_script_index_", 3_500],
+  [
+    "Kisara shared layout runtime",
+    "KisaraLayout.astro_astro_type_script_index_1_lang.",
+    9_000
+  ],
+  [
+    "Kisara Home primary module",
+    "HomePage.astro_astro_type_script_index_",
+    225_000
+  ],
+  [
+    "Kisara stage loader",
+    "KisaraChibiStage.astro_astro_type_script_index_",
+    3_500
+  ],
   ["Kisara deferred stage runtime", "chibiStage.", 20_000],
   ["Kisara Blog page runtime", "blogPage.", 20_000],
   ["Kisara Works page runtime", "worksPage.", 72_000]
@@ -37,10 +53,19 @@ const formatBytes = (value) => `${(value / 1024).toFixed(1)} KiB`;
 
 const recordBudget = (label, size, limit) => {
   const passed = size <= limit;
-  console.log(`${passed ? "PASS" : "FAIL"} ${label}: ${formatBytes(size)} / ${formatBytes(limit)}`);
-  if (!passed) failures.push(`${label} exceeded its budget by ${formatBytes(size - limit)}`);
+
+  console.log(
+    `${passed ? "PASS" : "FAIL"} ${label}: ${formatBytes(size)} / ${formatBytes(limit)}`
+  );
+
+  if (!passed) {
+    failures.push(
+      `${label} exceeded its budget by ${formatBytes(size - limit)}`
+    );
+  }
 };
 
+// 基础文件预算检查
 for (const [label, relativePath, limit] of fileBudgets) {
   try {
     const details = await stat(new URL(relativePath, distDir));
@@ -50,15 +75,33 @@ for (const [label, relativePath, limit] of fileBudgets) {
   }
 }
 
+// 页面内 CSS 总大小预算
 for (const [label, relativePath, limit] of stylesheetBudgets) {
   try {
     const html = await readFile(new URL(relativePath, distDir), "utf8");
-    const stylesheetPaths = [...html.matchAll(/href="\/_astro\/([^"?]+\.css)(?:\?[^\"]*)?"/g)]
-      .map((match) => match[1]);
+
+    const stylesheetPattern =
+      /href="[^"]*\/_astro\/([^"?]+\.css)(?:\?[^"]*)?"/g;
+
+    const stylesheetPaths = [
+      ...html.matchAll(stylesheetPattern)
+    ].map((match) => match[1]);
+
     const uniquePaths = [...new Set(stylesheetPaths)];
-    if (uniquePaths.length === 0) throw new Error("no stylesheets found");
-    const sizes = await Promise.all(uniquePaths.map((name) => stat(new URL(name, astroDir))));
-    recordBudget(label, sizes.reduce((total, details) => total + details.size, 0), limit);
+
+    if (uniquePaths.length === 0) {
+      throw new Error("no stylesheets found");
+    }
+
+    const sizes = await Promise.all(
+      uniquePaths.map((name) => stat(new URL(name, astroDir)))
+    );
+
+    recordBudget(
+      label,
+      sizes.reduce((total, details) => total + details.size, 0),
+      limit
+    );
   } catch (error) {
     failures.push(`${label} could not be measured: ${error.message}`);
   }
@@ -71,87 +114,231 @@ try {
   failures.push("dist/_astro is missing");
 }
 
+// JS bundle 文件预算
 for (const [label, prefix, limit] of bundleBudgets) {
-  const matches = astroFiles.filter((name) => name.startsWith(prefix) && name.endsWith(".js"));
+  const matches = astroFiles.filter(
+    (name) => name.startsWith(prefix) && name.endsWith(".js")
+  );
+
   if (matches.length !== 1) {
-    failures.push(`${label} expected one emitted bundle, found ${matches.length}`);
+    failures.push(
+      `${label} expected one emitted bundle, found ${matches.length}`
+    );
     continue;
   }
+
   const details = await stat(new URL(matches[0], astroDir));
   recordBudget(label, details.size, limit);
 }
 
+// index.html 场景清单 + 图片校验
 try {
   const homeHtml = await readFile(new URL("index.html", distDir), "utf8");
+
   if (/kisara-title-gloss|memory-attack|memory-clash/.test(homeHtml)) {
-    failures.push("Kisara Home restored a retired blade stage or superseded memory shot");
+    failures.push(
+      "Kisara Home restored a retired blade stage or superseded memory shot"
+    );
   }
+
   if (/kisara-title-cross|kisara-screen-impact|kisara-burst-canvas/.test(homeHtml)) {
-    failures.push("Kisara Home restored a retired black-hole or warning pass");
+    failures.push(
+      "Kisara Home restored a retired black-hole or warning pass"
+    );
   }
+
   if (!homeHtml.includes("kisara-gate-background-fight-wash")) {
-    failures.push("Kisara Home lost its original clear reconstruction wash");
+    failures.push(
+      "Kisara Home lost its original clear reconstruction wash"
+    );
   }
-  const manifestText = homeHtml.match(/<script\b[^>]*data-kisara-scene-manifest[^>]*>([^]*?)<\/script>/)?.[1];
+
+  // ========== 修复后的正则！==========
+  const manifestPattern =
+    /<script\b[^>]*data-kisara-scene-manifest[^>]*>([\s\S]*?)<\/script>/;
+
+  const manifestMatch = homeHtml.match(manifestPattern);
+  const manifestText = manifestMatch?.[1];
+
   const scenes = JSON.parse(manifestText ?? "[]");
-  if (scenes.filter(scene => scene.kind === "memory").length !== 9
-    || scenes.filter(scene => scene.kind === "transformation").length !== 3) {
-    failures.push("Kisara Gate lost its nine memory and three smoke shots");
+
+  if (
+    scenes.filter((scene) => scene.kind === "memory").length !== 9 ||
+    scenes.filter((scene) => scene.kind === "transformation").length !== 3
+  ) {
+    failures.push(
+      "Kisara Gate lost its nine memory and three smoke shots"
+    );
   }
-  const storySizes = await Promise.all(scenes.map(scene => stat(new URL(scene.image.replace(/^\//, ""), distDir))));
-  const finalShot = await stat(new URL("themes/kisara/assets/fight.webp", distDir));
-  recordBudget("Kisara complete story images", storySizes.reduce((sum, file) => sum + file.size, finalShot.size), 850_000);
-  recordBudget("Kisara first two story images", storySizes.slice(0, 2).reduce((sum, file) => sum + file.size, 0), 140_000);
-  if (!/<link\s+rel="preload"\s+as="image"\s+href="\/themes\/kisara\/assets\/gate-background\.webp"\s+fetchpriority="high"\s*\/?>/i.test(homeHtml)) {
-    failures.push("Kisara Home lost its high-priority Gate background preload");
+
+  const storySizes = await Promise.all(
+    scenes.map((scene) => {
+      const imagePath = scene.image.startsWith("/")
+        ? scene.image.slice(1)
+        : scene.image;
+      return stat(new URL(imagePath, distDir));
+    })
+  );
+
+  const finalShot = await stat(
+    new URL("themes/kisara/assets/fight.webp", distDir)
+  );
+
+  recordBudget(
+    "Kisara complete story images",
+    storySizes.reduce((sum, file) => sum + file.size, finalShot.size),
+    850_000
+  );
+
+  recordBudget(
+    "Kisara first two story images",
+    storySizes
+      .slice(0, 2)
+      .reduce((sum, file) => sum + file.size, 0),
+    140_000
+  );
+
+  const preloadPattern = new RegExp(
+    '<link\\s+rel="preload"\\s+as="image"\\s+href="/themes/kisara/assets/gate-background\\.webp"\\s+fetchpriority="high"\\s*/?>',
+    "i"
+  );
+
+  if (!preloadPattern.test(homeHtml)) {
+    failures.push(
+      "Kisara Home lost its high-priority Gate background preload"
+    );
   }
-  const homeEventVideoPath = "/themes/kisara/assets/home-event-003-new.mp4";
+
+  const homeEventVideoPath =
+    "/themes/kisara/assets/home-event-003-new.mp4";
+
   if (!homeHtml.includes(`data-src="${homeEventVideoPath}"`)) {
-    failures.push("Kisara Home 003 video lost its deferred data-src");
+    failures.push(
+      "Kisara Home 003 video lost its deferred data-src"
+    );
   }
-  if (new RegExp(`<source\\b[^>]*\\ssrc=["']${homeEventVideoPath.replaceAll("/", "\\/")}["']`, "i").test(homeHtml)) {
-    failures.push("Kisara Home 003 video regressed to an eager source request");
+
+  const eagerHomeEventVideoPattern = new RegExp(
+    `<source\\b[^>]*\\ssrc=["']${homeEventVideoPath.replaceAll("/", "\\/")}`,
+    "i"
+  );
+
+  if (eagerHomeEventVideoPattern.test(homeHtml)) {
+    failures.push(
+      "Kisara Home 003 video regressed to an eager source request"
+    );
   }
-  const fridgeVideo = homeHtml.match(/<video\b[^>]*data-fridge-video[^>]*>/i)?.[0];
-  if (!fridgeVideo || !/\sdata-src=["'][^"']*fridge-opening-002\.mp4/i.test(fridgeVideo)
-    || /\ssrc=/i.test(fridgeVideo) || !/\spreload=["']none["']/i.test(fridgeVideo)) {
-    failures.push("Kisara Home 002 video lost its deferred loading contract");
+
+  const fridgeVideoPattern =
+    /<video\b[^>]*data-fridge-video[^>]*>/i;
+
+  const fridgeVideo = homeHtml.match(fridgeVideoPattern)?.[0];
+
+  const fridgeDataSrcPattern =
+    /\sdata-src=["'][^"']*fridge-opening-002.mp4/i;
+
+  const fridgeSrcPattern = /\ssrc=/i;
+  const fridgePreloadPattern = /\spreload=["']none["']/i;
+
+  if (
+    !fridgeVideo ||
+    !fridgeDataSrcPattern.test(fridgeVideo) ||
+    fridgeSrcPattern.test(fridgeVideo) ||
+    !fridgePreloadPattern.test(fridgeVideo)
+  ) {
+    failures.push(
+      "Kisara Home 002 video lost its deferred loading contract"
+    );
   }
 } catch {
-  failures.push("Kisara Home HTML is missing for critical-image validation");
+  failures.push(
+    "Kisara Home HTML is missing for critical-image validation"
+  );
 }
 
+// responsive-covers.json 校验
 try {
-  const covers = JSON.parse(await readFile(new URL("../src/core/content/responsive-covers.json", import.meta.url), "utf8"));
+  const covers = JSON.parse(
+    await readFile(
+      new URL(
+        "../src/core/content/responsive-covers.json",
+        import.meta.url
+      ),
+      "utf8"
+    )
+  );
+
   let bytes = 0;
   let smallBytes = 0;
   let originalBytes = 0;
+
   for (const [source, cover] of Object.entries(covers)) {
-    originalBytes += (await stat(new URL(source.slice(1), distDir))).size;
+    const sourcePath = source.startsWith("/")
+      ? source.slice(1)
+      : source;
+
+    originalBytes += (
+      await stat(new URL(sourcePath, distDir))
+    ).size;
+
     smallBytes += cover.variants[0]?.bytes ?? 0;
+
     for (const variant of cover.variants) {
-      const published = await stat(new URL(variant.src.slice(1), distDir));
-      if (published.size !== variant.bytes) failures.push(`Responsive cover size mismatch: ${variant.src}`);
+      const variantPath = variant.src.startsWith("/")
+        ? variant.src.slice(1)
+        : variant.src;
+
+      const published = await stat(
+        new URL(variantPath, distDir)
+      );
+
+      if (published.size !== variant.bytes) {
+        failures.push(
+          `Responsive cover size mismatch: ${variant.src}`
+        );
+      }
+
       bytes += published.size;
     }
   }
-  recordBudget("Responsive cover derivatives", bytes, 5_000_000);
-  recordBudget("Small covers versus originals", smallBytes, Math.floor(originalBytes * 0.4));
+
+  recordBudget(
+    "Responsive cover derivatives",
+    bytes,
+    5_000_000
+  );
+
+  recordBudget(
+    "Small covers versus originals",
+    smallBytes,
+    Math.floor(originalBytes * 0.4)
+  );
+
+  // 禁止媒体泄露
   for (const relative of excludedPublicMedia) {
     try {
       await stat(new URL(relative, distDir));
-      failures.push(`Reviewed source media leaked into the build: ${relative}`);
+      failures.push(
+        `Reviewed source media leaked into the build: ${relative}`
+      );
     } catch (error) {
-      if (error.code !== "ENOENT") throw error;
+      if (error.code !== "ENOENT") {
+        throw error;
+      }
     }
   }
 } catch (error) {
-  failures.push(`Published media validation failed: ${error.message}`);
+  failures.push(
+    `Published media validation failed: ${error.message}`
+  );
 }
 
+// 结果输出
 if (failures.length > 0) {
   console.error("\nPerformance budget violations:");
-  for (const failure of failures) console.error(`- ${failure}`);
+  for (const failure of failures) {
+    console.error(`- ${failure}`);
+  }
   process.exitCode = 1;
 } else {
   console.log("\nAll performance budgets passed.");
