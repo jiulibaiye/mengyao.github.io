@@ -1,0 +1,34 @@
+{
+  "name": "anime-tech-blog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run generate:assets && npm run prepare:covers && astro build && npm run prune:media && npm run check:modules && npm run check:performance",
+    "check:modules": "node --experimental-vm-modules scripts/check-built-modules.mjs",
+    "prepare:covers": "node scripts/prepare-responsive-covers.mjs",
+    "prune:media": "node scripts/prune-published-media.mjs",
+    "check:performance": "node scripts/check-performance-budgets.mjs",
+    "test": "node --test tests/*.test.ts",
+    "preview": "astro preview",
+    "generate:assets": "node scripts/generate-assets.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "upload:images": "node scripts/upload-images-to-scdn.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "@iconify-json/simple-icons": "^1.2.83",
+    "@iconify-json/tabler": "^1.2.35",
+    "astro": "^6.3.3",
+    "astro-expressive-code": "^0.42.0",
+    "astro-icon": "^1.1.5",
+    "pagefind": "^1.5.2",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
+  }
+}
