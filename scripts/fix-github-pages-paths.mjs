@@ -1,8 +1,8 @@
+
 import fs from "node:fs";
 import path from "node:path";
 
 const DIST = path.resolve("dist");
-const BASE = "/mengyao.github.io";
 
 const extensions = new Set([
   ".html",
@@ -19,10 +19,10 @@ let replacements = 0;
 
 function fixContent(content) {
   return content.replace(
-    /(["'`(=:\s]|&quot;)\/(themes|blog-covers)\//g,
+    /(["'`(=:\s]|&quot;)\/mengyao\.github\.io\/(themes|blog-covers)\//g,
     (match, prefix, folder) => {
       replacements++;
-      return `${prefix}${BASE}/${folder}/`;
+      return `${prefix}/${folder}/`;
     }
   );
 }
@@ -59,6 +59,7 @@ if (!fs.existsSync(DIST)) {
 walk(DIST);
 
 console.log("");
-console.log(`GitHub Pages path fix complete.`);
+console.log("Custom domain path fix complete.");
 console.log(`Changed files: ${changedFiles}`);
 console.log(`Replacements: ${replacements}`);
+
