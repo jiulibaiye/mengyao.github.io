@@ -1,4 +1,4 @@
-import { readFile, readdir, stat } from "node:fs/promises";
+﻿import { readFile, readdir, stat } from "node:fs/promises";
 import { excludedPublicMedia } from "./lib/media-publish-policy.mjs";
 
 const distDir = new URL("../dist/", import.meta.url);
@@ -65,7 +65,7 @@ const recordBudget = (label, size, limit) => {
   }
 };
 
-// 基础文件预算检查
+// 鍩虹鏂囦欢棰勭畻妫€鏌?
 for (const [label, relativePath, limit] of fileBudgets) {
   try {
     const details = await stat(new URL(relativePath, distDir));
@@ -75,7 +75,7 @@ for (const [label, relativePath, limit] of fileBudgets) {
   }
 }
 
-// 页面内 CSS 总大小预算
+// 椤甸潰鍐?CSS 鎬诲ぇ灏忛绠?
 for (const [label, relativePath, limit] of stylesheetBudgets) {
   try {
     const html = await readFile(new URL(relativePath, distDir), "utf8");
@@ -114,7 +114,7 @@ try {
   failures.push("dist/_astro is missing");
 }
 
-// JS bundle 文件预算
+// JS bundle 鏂囦欢棰勭畻
 for (const [label, prefix, limit] of bundleBudgets) {
   const matches = astroFiles.filter(
     (name) => name.startsWith(prefix) && name.endsWith(".js")
@@ -131,7 +131,7 @@ for (const [label, prefix, limit] of bundleBudgets) {
   recordBudget(label, details.size, limit);
 }
 
-// index.html 场景清单 + 图片校验
+// index.html 鍦烘櫙娓呭崟 + 鍥剧墖鏍￠獙
 try {
   const homeHtml = await readFile(new URL("index.html", distDir), "utf8");
 
@@ -153,7 +153,7 @@ try {
     );
   }
 
-  // ========== 修复后的正则！==========
+  // ========== 淇鍚庣殑姝ｅ垯锛?=========
   const manifestPattern =
     /<script\b[^>]*data-kisara-scene-manifest[^>]*>([\s\S]*?)<\/script>/;
 
@@ -199,7 +199,7 @@ try {
   );
 
   const preloadPattern = new RegExp(
-    '<link\\s+rel="preload"\\s+as="image"\\s+href="/themes/kisara/assets/gate-background\\.webp"\\s+fetchpriority="high"\\s*/?>',
+    '<link\\s+rel="preload"\\s+as="image"\\s+href="(?:/mengyao\.github\.io)?/themes/kisara/assets/gate-background\\.webp"\\s+fetchpriority="high"\\s*/?>',
     "i"
   );
 
@@ -256,7 +256,7 @@ try {
   );
 }
 
-// responsive-covers.json 校验
+// responsive-covers.json 鏍￠獙
 try {
   const covers = JSON.parse(
     await readFile(
@@ -314,7 +314,7 @@ try {
     Math.floor(originalBytes * 0.4)
   );
 
-  // 禁止媒体泄露
+  // 绂佹濯掍綋娉勯湶
   for (const relative of excludedPublicMedia) {
     try {
       await stat(new URL(relative, distDir));
@@ -333,7 +333,7 @@ try {
   );
 }
 
-// 结果输出
+// 缁撴灉杈撳嚭
 if (failures.length > 0) {
   console.error("\nPerformance budget violations:");
   for (const failure of failures) {
