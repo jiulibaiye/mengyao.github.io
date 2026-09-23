@@ -9,10 +9,9 @@ import rehypeExpressiveCode from "rehype-expressive-code";
 import * as pagefind from "pagefind";
 import { fileURLToPath } from "node:url";
 
-const isDev = process.env.NODE_ENV === "development";
-
 const expressiveCodeOptions = {
   themes: ["github-dark"],
+
   defaultProps: {
     wrap: true,
     overridesByLang: {
@@ -21,10 +20,12 @@ const expressiveCodeOptions = {
       }
     }
   },
+
   frames: {
     showCopyToClipboardButton: true,
     removeCommentsWhenCopyingTerminalFrames: false
   },
+
   styleOverrides: {
     borderRadius: "8px",
     codeFontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
@@ -34,6 +35,7 @@ const expressiveCodeOptions = {
     codePaddingInline: "1.25rem",
     codeBackground: "#111827",
     uiFontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
+
     frames: {
       frameBoxShadowCssValue: "0 18px 38px rgba(12, 18, 31, 0.28)",
       editorActiveTabBackground: "#111827",
@@ -46,51 +48,66 @@ const expressiveCodeOptions = {
   }
 };
 
-const pagefindIntegration = () => ({
-  name: "yuimi-pagefind",
-  hooks: {
-    "astro:build:done": async ({ dir, logger }) => {
-      const { index, errors } = await pagefind.createIndex({
-        forceLanguage: "zh",
-        includeCharacters: "_-:"
-      });
+function pagefindIntegration() {
+  return {
+    name: "yuimi-pagefind",
 
-      if (!index) {
-        logger.warn(`Pagefind index was not created: ${errors.join(", ")}`);
-        return;
+    hooks: {
+      "astro:build:done": async ({ dir, logger }) => {
+        const result = await pagefind.createIndex({
+          forceLanguage: "zh",
+          includeCharacters: "_-:"
+        });
+
+        const index = result.index;
+        const errors = result.errors;
+
+        if (!index) {
+          logger.warn(
+            `Pagefind index was not created: ${errors.join(", ")}`
+          );
+          return;
+        }
+
+        const distDir = fileURLToPath(dir);
+
+        const addResult = await index.addDirectory({
+          path: distDir,
+          glob: "**/*.html"
+        });
+
+        if (addResult.errors.length > 0) {
+          logger.warn(
+            `Pagefind indexing warnings: ${addResult.errors.join(", ")}`
+          );
+        }
+
+        const pagefindDir = new URL("./pagefind/", dir);
+
+        const writeResult = await index.writeFiles({
+          outputPath: fileURLToPath(pagefindDir)
+        });
+
+        if (writeResult.errors.length > 0) {
+          logger.warn(
+            `Pagefind write warnings: ${writeResult.errors.join(", ")}`
+          );
+        } else {
+          logger.info(
+            `Pagefind indexed ${addResult.page_count} pages.`
+          );
+        }
+
+        await pagefind.close();
       }
-
-      const distDir = fileURLToPath(dir);
-
-      const addResult = await index.addDirectory({
-        path: distDir,
-        glob: "**/*.html"
-      });
-
-      if (addResult.errors.length) {
-        logger.warn(`Pagefind indexing warnings: ${addResult.errors.join(", ")}`);
-      }
-
-      const writeResult = await index.writeFiles({
-        outputPath: fileURLToPath(new URL("./pagefind", dir))
-      });
-
-      if (writeResult.errors.length) {
-        logger.warn(`Pagefind write warnings: ${writeResult.errors.join(", ")}`);
-      } else {
-        logger.info(`Pagefind indexed ${addResult.page_count} pages.`);
-      }
-
-      await pagefind.close();
     }
-  }
-});
+  };
+}
 
 export default defineConfig({
-  site: "https://jiulibaiye.github.io/mengyao.github.io",
+  site: "https://mengyao.ccwu.cc",
 
-  // 本地开发使用根路径，GitHub Pages 使用仓库路径
-  base: isDev ? "/" : "/mengyao.github.io",
+  base: "/",
 
   output: "static",
 
@@ -103,7 +120,8 @@ export default defineConfig({
     expressiveCode(expressiveCodeOptions),
 
     sitemap({
-      filter: (page) => !new URL(page).pathname.startsWith("/themes/")
+      filter: (page) =>
+        !new URL(page).pathname.startsWith("/themes/")
     }),
 
     icon({
@@ -175,7 +193,9 @@ export default defineConfig({
 
   markdown: {
     syntaxHighlight: false,
+
     gfm: true,
+
     remarkPlugins: [remarkGfm],
 
     rehypePlugins: [
@@ -185,10 +205,12 @@ export default defineConfig({
         rehypeAutolinkHeadings,
         {
           behavior: "append",
+
           properties: {
             className: ["heading-anchor"],
-            ariaLabel: "澶嶅埗鏍囬閾炬帴"
+            ariaLabel: "heading anchor"
           },
+
           content: {
             type: "text",
             value: "#"
