@@ -982,15 +982,15 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
       </div>
 
       <div class="kisara-context-theme-switch">
-        <span>澶栬</span>
+        <span>外观</span>
 
-        <div aria-label="鍒囨崲涓婚">
+        <div aria-label="切换主题">
           {themeOptions.map((theme) => (
             <button
               type="button"
               data-theme-select={theme.id}
               aria-pressed={theme.id === "kisara" ? "true" : "false"}
-              aria-label={`鍒囨崲鍒?${theme.label} 涓婚`}
+              aria-label={`切换到 ${theme.label} 主题`}
               title={theme.label}
             >
               <i aria-hidden="true"></i>
