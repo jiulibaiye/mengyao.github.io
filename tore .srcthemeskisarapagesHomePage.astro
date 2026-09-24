@@ -1,0 +1,93 @@
+[1mdiff --git a/src/themes/kisara/pages/HomePage.astro b/src/themes/kisara/pages/HomePage.astro[m
+[1mindex f85e06a..18949e5 100644[m
+[1m--- a/src/themes/kisara/pages/HomePage.astro[m
+[1m+++ b/src/themes/kisara/pages/HomePage.astro[m
+[36m@@ -1,4 +1,4 @@[m
+[31m----[m
+[32m+[m[32m﻿---[m
+ import KisaraLayout from "../layouts/KisaraLayout.astro";[m
+ import KisaraFoundSelfEasterEgg from "../components/KisaraFoundSelfEasterEgg.astro";[m
+ import KisaraLovebrainEasterEgg from "../components/KisaraLovebrainEasterEgg.astro";[m
+[36m@@ -61,8 +61,8 @@[m [mconst gateStyle = [[m
+ ---[m
+ [m
+ <KisaraLayout[m
+[31m-  title="Kisara | Yuimi Lab"[m
+[31m-  description="Yuimi Lab 的 Kisara 视觉交互主题。"[m
+[32m+[m[32m  title="Kisara | MengYao Blog"[m
+[32m+[m[32m  description="Yuimi Lab 鐨?Kisara 瑙嗚浜や簰涓婚銆?[m
+   stylesheets={[homeStylesheet, homeEventVideoStylesheet, homeComicStylesheet, homeTransitionsStylesheet]}[m
+   priorityImages={activeBackgroundUrl ? [activeBackgroundUrl] : []}[m
+ >[m
+[36m@@ -262,14 +262,14 @@[m [mconst gateStyle = [[m
+     <p class="kisara-scroll-cue" data-kisara-cue><span class="kisara-credit-author">Yuimi-chaya</span> / <span>GPT in Codex</span></p>[m
+     <button class="kisara-motion-toggle" type="button" data-kisara-motion-toggle hidden aria-pressed="false">[m
+       <Icon name="tabler:activity-heartbeat" aria-hidden="true" />[m
+[31m-      <span>体感视差</span>[m
+[32m+[m[32m      <span>浣撴劅瑙嗗樊</span>[m
+     </button>[m
+     <button[m
+       class="kisara-gate-auto"[m
+       type="button"[m
+       data-kisara-auto[m
+       data-state="idle"[m
+[31m-      aria-label="自动播放首屏演出"[m
+[32m+[m[32m      aria-label="鑷姩鎾斁棣栧睆婕斿嚭"[m
+     >[m
+       <span class="kisara-gate-auto-mark" aria-hidden="true">[m
+         <Icon name="tabler:player-play" class="kisara-auto-play-icon" />[m
+[36m@@ -277,7 +277,7 @@[m [mconst gateStyle = [[m
+       </span>[m
+       <span data-kisara-auto-label>AUTO</span>[m
+     </button>[m
+[31m-    <a class="kisara-gate-skip" href="#kisara-opening" data-kisara-skip aria-label="跳过演出">[m
+[32m+[m[32m    <a class="kisara-gate-skip" href="#kisara-opening" data-kisara-skip aria-label="璺宠繃婕斿嚭">[m
+       <span>SKIP</span><Icon name="tabler:player-skip-forward" aria-hidden="true" />[m
+     </a>[m
+   </section>[m
+[36m@@ -1752,7 +1752,7 @@[m [mconst gateStyle = [[m
+         motionToggle.setAttribute("aria-pressed", String(orientationEnabled));[m
+         motionToggle.classList.toggle("is-active", orientationEnabled);[m
+         const label = motionToggle.querySelector("span");[m
+[31m-        if (label) label.textContent = orientationEnabled ? "体感已启用" : "启用体感";[m
+[32m+[m[32m        if (label) label.textContent = orientationEnabled ? "浣撴劅宸插惎鐢? : "鍚敤浣撴劅";[m
+       };[m
+ [m
+       const resetOrientationCalibration = () => {[m
+[36m@@ -7550,10 +7550,10 @@[m [mconst gateStyle = [[m
+         autoPlay.setAttribute([m
+           "aria-label",[m
+           nextState === "playing"[m
+[31m-            ? "首屏演出正在自动播放"[m
+[32m+[m[32m            ? "棣栧睆婕斿嚭姝ｅ湪鑷姩鎾斁"[m
+             : nextState === "replay"[m
+[31m-              ? "重新自动播放首屏演出"[m
+[31m-              : "自动播放首屏演出"[m
+[32m+[m[32m              ? "閲嶆柊鑷姩鎾斁棣栧睆婕斿嚭"[m
+[32m+[m[32m              : "鑷姩鎾斁棣栧睆婕斿嚭"[m
+         );[m
+         if (autoPlayLabel) {[m
+           autoPlayLabel.textContent = nextState === "playing"[m
+[36m@@ -8273,7 +8273,7 @@[m [mconst gateStyle = [[m
+         }[m
+         setFoundSelfStatus("MEMORY FOUND");[m
+         if (foundSelfAnnouncer) {[m
+[31m-          foundSelfAnnouncer.textContent = "记忆回放完成。向下滑动继续浏览，或使用跳过按钮。";[m
+[32m+[m[32m          foundSelfAnnouncer.textContent = "璁板繂鍥炴斁瀹屾垚銆傚悜涓嬫粦鍔ㄧ户缁祻瑙堬紝鎴栦娇鐢ㄨ烦杩囨寜閽€?;[m
+         }[m
+       };[m
+ [m
+[36m@@ -8347,7 +8347,7 @@[m [mconst gateStyle = [[m
+           foundSelfOverlay.classList.add("is-running", "is-media-ready");[m
+           window.__yuimiKisaraEasterLedger?.mark("found-self");[m
+           setFoundSelfStatus("MEMORY PLAYBACK");[m
+[31m-          if (foundSelfAnnouncer) foundSelfAnnouncer.textContent = "记忆正在自动回放。播放期间滚轮输入已锁定。";[m
+[32m+[m[32m          if (foundSelfAnnouncer) foundSelfAnnouncer.textContent = "璁板繂姝ｅ湪鑷姩鍥炴斁銆傛挱鏀炬湡闂存粴杞緭鍏ュ凡閿佸畾銆?;[m
+           foundSelfSequenceTimer = window.setTimeout(settleFoundSelfSequence, 26_500);[m
+         };[m
+ [m
+[36m@@ -9347,3 +9347,4 @@[m [mconst gateStyle = [[m
+     })();[m
+   </script>[m
+ </KisaraLayout>[m
+[41m+[m
