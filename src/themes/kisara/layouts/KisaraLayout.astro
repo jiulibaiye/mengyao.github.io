@@ -798,7 +798,7 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
           type="button"
           data-kisara-panel-close
           aria-label="鍏抽棴涓婚閫夋嫨鍣?
-          title="鍏抽棴"
+          title="关闭"
         >
           <Icon name="tabler:x" aria-hidden="true" />
         </button>
@@ -860,7 +860,7 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
       data-kisara-scrollbar
       transition:name="kisara-scrollbar"
       role="progressbar"
-      aria-label="椤甸潰婊氬姩杩涘害"
+      aria-label="页面滚动进度"
       aria-controls="kisara-main"
       aria-orientation="vertical"
       aria-valuemin="0"
@@ -886,7 +886,7 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
       data-kisara-context-menu
       hidden
       tabindex="-1"
-      aria-label="MengYao Blog 涓婚蹇嵎鑿滃崟"
+      aria-label="MengYao Blog 主题快捷菜单"
     >
       <header class="kisara-context-head">
         <span
@@ -907,8 +907,8 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
           class="kisara-context-close"
           type="button"
           data-kisara-action="close"
-          aria-label="鍏抽棴蹇嵎鑿滃崟"
-          title="鍏抽棴"
+          aria-label="关闭快捷菜单"
+          title="关闭"
         >
           <Icon name="tabler:x" aria-hidden="true" />
         </button>
@@ -916,13 +916,13 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
 
       <div
         class="kisara-context-command-strip"
-        aria-label="娴忚鍣ㄦ搷浣?
+        aria-label="浏览器操作"
       >
         <button
           type="button"
           data-kisara-action="back"
-          aria-label="鍚庨€€"
-          title="鍚庨€€"
+          aria-label="后退"
+          title="后退"
         >
           <Icon name="tabler:arrow-left" aria-hidden="true" />
         </button>
@@ -930,8 +930,8 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
         <button
           type="button"
           data-kisara-action="forward"
-          aria-label="鍓嶈繘"
-          title="鍓嶈繘"
+          aria-label="前进"
+          title="前进"
         >
           <Icon name="tabler:arrow-right" aria-hidden="true" />
         </button>
@@ -939,8 +939,8 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
         <button
           type="button"
           data-kisara-action="refresh"
-          aria-label="鍒锋柊"
-          title="鍒锋柊"
+          aria-label="刷新"
+          title="刷新"
         >
           <Icon name="tabler:refresh" aria-hidden="true" />
         </button>
@@ -948,14 +948,14 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
         <button
           type="button"
           data-kisara-action="top"
-          aria-label="鍥炲埌椤堕儴"
-          title="鍥炲埌椤堕儴"
+          aria-label="回到顶部"
+          title="回到顶部"
         >
           <Icon name="tabler:arrow-up" aria-hidden="true" />
         </button>
       </div>
 
-      <div class="kisara-context-pages" aria-label="绔欏唴椤甸潰">
+      <div class="kisara-context-pages" aria-label="站内页面">
         {navItems.map((item) => (
           <a
             href={item.href}
@@ -969,15 +969,15 @@ const homePath = withBasePath(getThemePath("kisara", "/"));
         ))}
       </div>
 
-      <div class="kisara-context-page-actions" aria-label="椤甸潰鎿嶄綔">
+      <div class="kisara-context-page-actions" aria-label="页面操作">
         <button type="button" data-kisara-action="copy">
           <Icon name="tabler:link" aria-hidden="true" />
-          <span>澶嶅埗椤甸潰閾炬帴</span>
+          <span>复制页面链接</span>
         </button>
 
         <button type="button" data-kisara-action="copy-title">
           <Icon name="tabler:file-text" aria-hidden="true" />
-          <span>澶嶅埗椤甸潰鏍囬</span>
+          <span>复制页面标题</span>
         </button>
       </div>
 
