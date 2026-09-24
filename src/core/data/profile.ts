@@ -4,7 +4,7 @@ handle: "MengYao",
 siteName: "MengYao Blog",
 bio: "一个喜欢折腾代码和二次元的个人博客",
 github: "https://github.com/jiulibaiye",
-bilibili: "https://space.bilibili.com/494350222",
+bilibili: "https://space.bilibili.com/100410512",
 } as const;
 
 export const profileStatus = [
