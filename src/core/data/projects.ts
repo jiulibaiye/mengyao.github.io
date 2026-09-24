@@ -54,7 +54,7 @@ export const projectEntries = [
   },
   {
     id: "yuimi-web-lab",
-    title: "Yuimi Lab 页面机关",
+    title: "MengYao Blog 页面机关",
     type: "Web Lab",
     line: "astrbot",
     status: "持续追加",
