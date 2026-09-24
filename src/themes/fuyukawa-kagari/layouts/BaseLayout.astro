@@ -95,7 +95,7 @@ const themedNotFoundRedirectScript = `(() => {
         <img src={kagariAssets.scrollPig} alt="" width="56" height="48" />
       </div>
     </div>
-    <aside class="toy-dock" aria-label="Yuimi Lab toy dock" transition:persist="yuimi-toy-dock">
+    <aside class="toy-dock" aria-label="MengYao Blog toy dock" transition:persist="yuimi-toy-dock">
       <button class="toy-dock-handle" type="button" aria-label="打开音乐与看板娘工具" title="音乐与看板娘" aria-expanded="false" aria-controls="toy-dock-panel">
         <Icon name="tabler:sparkles" aria-hidden="true" />
       </button>
@@ -223,11 +223,11 @@ const themedNotFoundRedirectScript = `(() => {
       </main>
       <footer class="site-footer" data-footer-timers>
         <div class="footer-inner">
-          <p class="footer-signature-line">© 2026 BY 喝益胃 / Yuimi Lab</p>
+          <p class="footer-signature-line">© 2026 BY 梦妖 / MengYao Blog</p>
           <p>二次元手账、开发记录、还有一点点宇宙回声。</p>
           <p>🛰️ 旅行者一号：<time data-elapsed-from="1977-09-05T12:56:00Z" data-elapsed-mode="minute">计算中...</time> 仍在远航</p>
           <p>🛰️ 旅行者二号：<time data-elapsed-from="1977-08-20T14:29:00Z" data-elapsed-mode="minute">计算中...</time> 仍在远航</p>
-          <p>🌸 Yuimi Lab 已落地：<time data-elapsed-from="2026-05-18T00:00:00+08:00" data-elapsed-mode="second">计算中...</time></p>
+          <p>🌸 MengYao Blog 已落地：<time data-elapsed-from="2026-05-18T00:00:00+08:00" data-elapsed-mode="second">计算中...</time></p>
           <p>💍 契约之吻：<time data-elapsed-from="2022-09-24T00:00:00+08:00" data-elapsed-mode="days">计算中...</time>，第二季仍未响应</p>
           <p class="footer-status-line">sakura: falling / pig: on duty / tea: warm</p>
           <p class="manga-art-credit">插画与漫画：葉佐乃《儚いキミは猛攻をはじめる》 · 冬川篝主题手帖</p>
@@ -556,7 +556,7 @@ const themedNotFoundRedirectScript = `(() => {
         if (document.querySelector(".waifu-local-fallback")) return;
         const fallback = document.createElement("div");
         fallback.className = "waifu-local-fallback";
-        fallback.setAttribute("aria-label", "Yuimi Lab fallback 看板娘");
+        fallback.setAttribute("aria-label", "MengYao Blog fallback 看板娘");
         fallback.innerHTML = `
           <div class="waifu-local-bubble">Live2D 加载有点害羞，先由我值班。</div>
           <div class="waifu-local-character">
@@ -643,7 +643,7 @@ const themedNotFoundRedirectScript = `(() => {
             waifu.classList.remove("waifu-hidden");
             waifu.classList.add("waifu-active");
             anchorWaifu(waifu);
-            window.setTimeout(() => showWaifuMessage("欢迎来到 Yuimi Lab，今天也要开心写代码。"), 900);
+            window.setTimeout(() => showWaifuMessage("欢迎来到 MengYao Blog，今天也要开心写代码。"), 900);
             window.setTimeout(reconcileWaifuFallback, 4200);
             window.setTimeout(activateWaifuFallbackIfBlank, 12000);
           });
